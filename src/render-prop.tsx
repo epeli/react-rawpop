@@ -190,9 +190,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         );
     }
     render() {
-        if (!this.state.overlayContainer) {
-            return null;
-        }
+        const {overlayContainer} = this.state;
 
         return (
             <>
@@ -202,6 +200,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
                     getRef: this.wrapRef as any, // hmph
                 })}
                 {this.isVisible() &&
+                    overlayContainer &&
                     ReactDOM.createPortal(
                         this.renderMaybeOverlay(
                             <div
@@ -218,7 +217,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
                                 })}
                             </div>,
                         ),
-                        this.state.overlayContainer,
+                        overlayContainer,
                     )}
             </>
         );
