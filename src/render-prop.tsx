@@ -34,9 +34,9 @@ function getContainerStyles(props: {
 }
 
 const transforms = {
-    down: "translateX(-50%)",
+    top: "translate(-50%, -100%)",
+    bottom: "translateX(-50%)",
     left: "translate(-100%, -50%)",
-    up: "translate(-50%, -100%)",
 };
 
 export type IPosition = keyof typeof transforms;
@@ -124,7 +124,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
     };
 
     getPosition(): IPosition {
-        return this.props.position || "down";
+        return this.props.position || "bottom";
     }
 
     updatePosition = () => {
@@ -146,10 +146,10 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         let top: number;
 
         const position = this.getPosition();
-        if (position === "down") {
+        if (position === "bottom") {
             left = center.left;
             top = rect.top + rect.height;
-        } else if (position === "up") {
+        } else if (position === "top") {
             left = center.left;
             top = rect.top;
         } else {
