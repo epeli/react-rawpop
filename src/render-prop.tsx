@@ -37,6 +37,7 @@ const transforms = {
     top: "translate(-50%, -100%)",
     bottom: "translateX(-50%)",
     left: "translate(-100%, -50%)",
+    center: "translate(-50%, -50%)",
 };
 
 export type IPosition = keyof typeof transforms;
@@ -152,6 +153,9 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         } else if (position === "top") {
             left = center.left;
             top = rect.top;
+        } else if (position === "center") {
+            left = center.left;
+            top = center.top;
         } else {
             // left
             left = rect.left;
