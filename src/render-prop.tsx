@@ -33,14 +33,14 @@ function getContainerStyles(props: {
     };
 }
 
-const transforms = {
+const TRANSFORMS = {
     top: "translate(-50%, -100%)",
     bottom: "translateX(-50%)",
     left: "translate(-100%, -50%)",
     center: "translate(-50%, -50%)",
 };
 
-export type IPosition = keyof typeof transforms;
+export type IPosition = keyof typeof TRANSFORMS;
 
 export interface IPopoverActions {
     open: () => void;
@@ -140,13 +140,11 @@ export class Popover extends React.Component<IPopoverProps, IState> {
             left: rect.left + rect.width / 2,
         };
 
-        // const isTop = window.innerHeight / 2 - center.top > 0;
-        // const isRight = window.innerWidth / 2 - center.left < 0;
-
         let left: number;
         let top: number;
 
         const position = this.getPosition();
+
         if (position === "bottom") {
             left = center.left;
             top = rect.top + rect.height;
@@ -204,7 +202,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
                         this.renderMaybeOverlay(
                             <div
                                 style={getContainerStyles({
-                                    position: transforms[this.getPosition()],
+                                    position: TRANSFORMS[this.getPosition()],
                                     top: this.state.position.top,
                                     left: this.state.position.left,
                                 })}

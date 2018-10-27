@@ -17,7 +17,7 @@ const buttonStyles: CSSProperties = {
 function RenderPropExample() {
     return (
         <Popover
-            position="bottom"
+            position="center"
             renderContent={() => <div style={contentStyles}>hello</div>}
         >
             {pop => (
