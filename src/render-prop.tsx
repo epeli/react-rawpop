@@ -67,11 +67,10 @@ export interface IPopoverProps {
 interface IState {
     visible: boolean;
     position: {top: number; left: number};
+    overlayContainer: HTMLElement | null;
 }
 
 export class Popover extends React.Component<IPopoverProps, IState> {
-    overlayContainer!: HTMLElement;
-
     wrapRef = React.createRef<HTMLElement>();
 
     static defaultProps = {
@@ -83,6 +82,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         this.state = {
             position: {top: 0, left: 0},
             visible: false,
+            overlayContainer: null,
         };
     }
 
@@ -97,9 +97,9 @@ export class Popover extends React.Component<IPopoverProps, IState> {
     componentDidMount() {
         const el = document.getElementById("overlay-container");
         if (el) {
-            this.overlayContainer = el;
-        } else {
-            throw new Error("Popover: cannot find overlay-container");
+            this.setState({overlayContainer: el}, () => {
+                this.updatePosition();
+            });
         }
     }
 
@@ -190,6 +190,10 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         );
     }
     render() {
+        if (!this.state.overlayContainer) {
+            return null;
+        }
+
         return (
             <>
                 {this.props.children({
@@ -214,7 +218,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
                                 })}
                             </div>,
                         ),
-                        this.overlayContainer,
+                        this.state.overlayContainer,
                     )}
             </>
         );
