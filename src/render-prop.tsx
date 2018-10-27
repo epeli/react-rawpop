@@ -44,7 +44,8 @@ export type IPosition = keyof typeof transforms;
 export interface IPopoverActions {
     open: () => void;
     close: () => void;
-    getRef: React.RefObject<HTMLElement>;
+    // getRef: React.RefObject<HTMLElement>;
+    getRef: (el: HTMLElement | null) => any;
 }
 
 export interface IContentParams {
@@ -192,7 +193,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
                 {this.props.children({
                     open: this.open,
                     close: this.close,
-                    getRef: this.wrapRef,
+                    getRef: this.wrapRef as any, // hmph
                 })}
                 {this.isVisible() &&
                     ReactDOM.createPortal(

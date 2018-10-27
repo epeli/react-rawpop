@@ -1,5 +1,10 @@
 import React, {CSSProperties} from "react";
 import {Popover} from "../src";
+import styled from "react-emotion";
+
+const Button = styled("button")({
+    color: "red",
+});
 
 const contentStyles: CSSProperties = {
     backgroundColor: "red",
@@ -13,13 +18,13 @@ function RenderPropExample() {
     return (
         <Popover renderContent={() => <div style={contentStyles}>hello</div>}>
             {pop => (
-                <button
+                <Button
                     style={buttonStyles}
-                    ref={pop.getRef}
+                    innerRef={pop.getRef}
                     onClick={pop.open}
                 >
                     click
-                </button>
+                </Button>
             )}
         </Popover>
     );

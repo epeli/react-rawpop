@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
 import React from "react";
-import RenderPropExample from "./render-prop";
+import RenderPropExample from "./render-prop-example";
 
 function App() {
     return (
