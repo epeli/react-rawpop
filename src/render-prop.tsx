@@ -250,6 +250,13 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         this.contentEl = el;
 
         this.trap = focusTrap(el, {
+            fallbackFocus: () => {
+                if (this.contentEl) {
+                    return this.contentEl;
+                } else {
+                    throw new Error("No contentEl?");
+                }
+            },
             clickOutsideDeactivates: true,
             onDeactivate: this.close,
         });
@@ -272,6 +279,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
                     ReactDOM.createPortal(
                         <div
                             ref={this.getContentRef}
+                            tabIndex={-1}
                             style={getContainerStyles({
                                 position: TRANSFORMS[this.getPosition()],
                                 top: this.state.position.top,

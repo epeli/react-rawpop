@@ -23,6 +23,11 @@ function App() {
                     <RenderPropExample position="bottom-left" />
                 </RenderPropExample>
             </div>
+            <div>
+                <RenderPropExample name="no tappables" position="bottom-right">
+                    Hello
+                </RenderPropExample>
+            </div>
         </div>
     );
 }

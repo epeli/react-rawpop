@@ -18,6 +18,7 @@ const buttonStyles: CSSProperties = {
 
 function RenderPropExample(props: {
     position: IPosition;
+    name?: string;
     children?: React.ReactNode;
 }) {
     return (
@@ -42,7 +43,7 @@ function RenderPropExample(props: {
                     innerRef={pop.getRef}
                     onClick={pop.open}
                 >
-                    {props.position}
+                    {props.name || props.position}
                 </Button>
             )}
         </Popover>
