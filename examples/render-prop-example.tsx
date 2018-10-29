@@ -3,7 +3,7 @@ import {Popover, IPosition} from "../src";
 import styled from "react-emotion";
 
 const Button = styled("button")({
-    color: "red",
+    color: "green",
 });
 
 const contentStyles: CSSProperties = {

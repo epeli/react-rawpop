@@ -17,15 +17,16 @@ function App() {
                 <RenderPropExample position="top-left" />
                 <RenderPropExample position="top-right" />
                 <RenderPropExample position="bottom-left" />
-
-                <RenderPropExample position="bottom-right">
-                    <a href="#4">link</a>
-                    <RenderPropExample position="bottom-left" />
-                </RenderPropExample>
+                <RenderPropExample position="bottom-right" />
             </div>
             <div>
                 <RenderPropExample name="no tappables" position="bottom-right">
                     Hello
+                </RenderPropExample>
+
+                <RenderPropExample name="nested" position="bottom-right">
+                    <a href="#4">link</a>
+                    <RenderPropExample position="bottom-left" />
                 </RenderPropExample>
             </div>
         </div>
