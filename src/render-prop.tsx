@@ -21,14 +21,14 @@ try {
 function getContainerStyles(props: {
     top: number;
     left: number;
-    position: string;
+    transform: string;
 }): CSSProperties {
     return {
         zIndex: Z_INDEX_BASE + 1,
         position: "absolute",
         top: props.top,
         left: props.left,
-        transform: props.position,
+        transform: props.transform,
     };
 }
 
@@ -293,7 +293,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
                             ref={this.getContentRef}
                             tabIndex={-1}
                             style={getContainerStyles({
-                                position: TRANSFORMS[this.getPosition()],
+                                transform: TRANSFORMS[this.getPosition()],
                                 top: this.state.position.top,
                                 left: this.state.position.left,
                             })}
