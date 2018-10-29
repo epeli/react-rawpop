@@ -19,9 +19,14 @@ const buttonStyles: CSSProperties = {
 function RenderPropExample(props: {position: IPosition}) {
     return (
         <Popover
-            isOpen
+            overlay={false}
             position={props.position}
-            renderContent={() => <div style={contentStyles}>hello</div>}
+            renderContent={() => (
+                <div style={contentStyles}>
+                    <a href="#1">link1</a>
+                    <a href="#2">link2</a>
+                </div>
+            )}
         >
             {pop => (
                 <Button

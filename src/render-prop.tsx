@@ -1,5 +1,6 @@
 import React, {CSSProperties} from "react";
 import ReactDOM from "react-dom";
+import focusTrap from "focus-trap";
 
 const Z_INDEX_BASE = 100;
 
@@ -77,7 +78,8 @@ interface IState {
 }
 
 export class Popover extends React.Component<IPopoverProps, IState> {
-    wrapRef = React.createRef<HTMLElement>();
+    targetRef = React.createRef<HTMLElement>();
+    contentRef = React.createRef<HTMLDivElement>();
 
     static defaultProps = {
         overlay: true,
@@ -109,6 +111,18 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         }
     }
 
+    componentDidUpdate() {
+        if (this.contentRef.current) {
+            if (this.isVisible()) {
+                const trap = focusTrap(this.contentRef.current, {
+                    onDeactivate: this.close,
+                    clickOutsideDeactivates: true,
+                });
+                trap.activate();
+            }
+        }
+    }
+
     close = () => {
         if (this.props.onChange) {
             this.props.onChange(false);
@@ -135,11 +149,11 @@ export class Popover extends React.Component<IPopoverProps, IState> {
     }
 
     updatePosition = () => {
-        if (!this.wrapRef.current) {
+        if (!this.targetRef.current) {
             return;
         }
 
-        const rect = this.wrapRef.current.getBoundingClientRect();
+        const rect = this.targetRef.current.getBoundingClientRect();
 
         const center = {
             top: rect.top + rect.height / 2,
@@ -218,13 +232,14 @@ export class Popover extends React.Component<IPopoverProps, IState> {
                 {this.props.children({
                     open: this.open,
                     close: this.close,
-                    getRef: this.wrapRef as any, // hmph
+                    getRef: this.targetRef as any, // hmph
                 })}
                 {this.isVisible() &&
                     overlayContainer &&
                     ReactDOM.createPortal(
                         this.renderMaybeOverlay(
                             <div
+                                ref={this.contentRef}
                                 style={getContainerStyles({
                                     position: TRANSFORMS[this.getPosition()],
                                     top: this.state.position.top,
