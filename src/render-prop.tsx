@@ -10,11 +10,8 @@ function getContainerStyles(props: {
     position: string;
 }): CSSProperties {
     return {
-        display: "flex",
         zIndex: Z_INDEX_BASE + 1,
-        position: "fixed",
-        flexDirection: "column",
-        alignItems: "center",
+        position: "absolute",
         top: props.top,
         left: props.left,
         transform: props.position,
