@@ -16,6 +16,29 @@ const buttonStyles: CSSProperties = {
     margin: 50,
 };
 
+class Grow extends React.Component {
+    state = {
+        things: [] as number[],
+    };
+
+    handleClick = () => {
+        this.setState({
+            things: [...this.state.things, Math.random()],
+        });
+    };
+
+    render() {
+        return (
+            <div>
+                <button onClick={this.handleClick}>add</button>
+                {this.state.things.map(thing => (
+                    <div key={thing}>{thing}</div>
+                ))}
+            </div>
+        );
+    }
+}
+
 function RenderPropExample(props: {
     position: IPosition;
     name?: string;
@@ -32,6 +55,7 @@ function RenderPropExample(props: {
                         <>
                             <a href="#1">link1</a>
                             <a href="#2">link2</a>
+                            <Grow />
                         </>
                     )}
                 </div>
