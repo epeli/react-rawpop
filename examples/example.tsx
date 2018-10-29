@@ -16,6 +16,8 @@ function App() {
             <div>
                 <RenderPropExample position="top-left" />
                 <RenderPropExample position="top-right" />
+                <RenderPropExample position="bottom-left" />
+                <RenderPropExample position="bottom-right" />
             </div>
         </div>
     );
