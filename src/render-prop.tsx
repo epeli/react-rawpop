@@ -65,13 +65,13 @@ export interface IPopoverProps {
     children: (actions: IPopoverActions) => React.ReactNode;
     position?: IPosition;
     overlay?: boolean;
-    visible?: boolean;
+    isOpen?: boolean;
     onChange?: (visible: boolean) => void;
     renderContent(props: IContentParams): React.ReactNode;
 }
 
 interface IState {
-    visible: boolean;
+    isOpen: boolean;
     position: {top: number; left: number};
     overlayContainer: HTMLElement | null;
 }
@@ -87,17 +87,17 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         super(props);
         this.state = {
             position: {top: 0, left: 0},
-            visible: false,
+            isOpen: false,
             overlayContainer: null,
         };
     }
 
     isVisible(): boolean {
-        if (typeof this.props.visible === "boolean") {
-            return this.props.visible;
+        if (typeof this.props.isOpen === "boolean") {
+            return this.props.isOpen;
         }
 
-        return this.state.visible;
+        return this.state.isOpen;
     }
 
     componentDidMount() {
@@ -113,7 +113,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         if (this.props.onChange) {
             this.props.onChange(false);
         }
-        this.setState({visible: false});
+        this.setState({isOpen: false});
     };
 
     handleWrapClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -126,7 +126,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         if (this.props.onChange) {
             this.props.onChange(true);
         }
-        this.setState({visible: true});
+        this.setState({isOpen: true});
         this.updatePosition();
     };
 

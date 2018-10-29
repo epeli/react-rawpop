@@ -19,7 +19,7 @@ const buttonStyles: CSSProperties = {
 function RenderPropExample(props: {position: IPosition}) {
     return (
         <Popover
-            visible
+            isOpen
             position={props.position}
             renderContent={() => <div style={contentStyles}>hello</div>}
         >
