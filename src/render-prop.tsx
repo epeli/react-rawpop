@@ -63,7 +63,7 @@ const TRAPS: ReturnType<typeof focusTrap>[] = [];
 
 export class Popover extends React.Component<IPopoverProps, IState> {
     targetRef = React.createRef<HTMLElement>();
-    contentEl?: HTMLDivElement;
+    containerEl?: HTMLDivElement;
     trap?: FocusTrap;
 
     constructor(props: IPopoverProps) {
@@ -232,11 +232,11 @@ export class Popover extends React.Component<IPopoverProps, IState> {
     getContentRef = (el: HTMLDivElement | null) => {
         if (!el) {
             this.removeTrap();
-            this.contentEl = undefined;
+            this.containerEl = undefined;
             return;
         }
 
-        if (this.contentEl === el) {
+        if (this.containerEl === el) {
             return;
         }
 
@@ -244,12 +244,12 @@ export class Popover extends React.Component<IPopoverProps, IState> {
             this.removeTrap();
         }
 
-        this.contentEl = el;
+        this.containerEl = el;
 
         this.trap = focusTrap(el, {
             fallbackFocus: () => {
-                if (this.contentEl) {
-                    return this.contentEl;
+                if (this.containerEl) {
+                    return this.containerEl;
                 } else {
                     throw new Error("No contentEl?");
                 }
