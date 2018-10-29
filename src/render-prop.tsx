@@ -128,12 +128,6 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         });
     };
 
-    handleWrapClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if ((e.target as HTMLElement).dataset.popoveroverlay) {
-            this.close();
-        }
-    };
-
     open = () => {
         console.log("trying to open");
 
