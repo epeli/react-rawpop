@@ -4,6 +4,20 @@ import focusTrap, {FocusTrap} from "focus-trap";
 
 const Z_INDEX_BASE = 100;
 
+/**
+ * https://github.com/WICG/EventListenerOptions/blob/139eb342e1cccb71c9be849927566a2ab6657097/explainer.md
+ */
+let SUPPORTS_PASSIVE = false;
+try {
+    var opts = Object.defineProperty({}, "passive", {
+        get: function() {
+            SUPPORTS_PASSIVE = true;
+        },
+    });
+    window.addEventListener("testPassive", null as any, opts);
+    window.removeEventListener("testPassive", null as any, opts);
+} catch (e) {}
+
 function getContainerStyles(props: {
     top: number;
     left: number;
@@ -86,6 +100,12 @@ export class Popover extends React.Component<IPopoverProps, IState> {
     componentDidMount() {
         const el = document.getElementById("overlay-container");
 
+        window.addEventListener(
+            "scroll",
+            this.updatePosition,
+            SUPPORTS_PASSIVE ? {passive: true} : false,
+        );
+
         if (!el) {
             return;
         }
@@ -97,6 +117,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
 
     componentWillUnmount() {
         this.removeTrap();
+        window.removeEventListener("scroll", this.updatePosition);
     }
 
     componentDidUpdate() {
@@ -197,8 +218,8 @@ export class Popover extends React.Component<IPopoverProps, IState> {
 
         this.setState({
             position: {
-                top: top,
-                left,
+                top: top + window.scrollY,
+                left: left + window.scrollX,
             },
         });
     };

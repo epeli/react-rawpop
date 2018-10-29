@@ -1,12 +1,13 @@
 import ReactDOM from "react-dom";
 import React from "react";
 import RenderPropExample from "./render-prop-example";
+import ControlledExample from "./controlled";
 
 function App() {
     return (
         <div>
             <div id="overlay-container" />
-            <div>
+            <div style={{marginTop: 800, width: 1000}}>
                 <RenderPropExample position="center" />
                 <RenderPropExample position="left" />
                 <RenderPropExample position="top" />
@@ -24,7 +25,9 @@ function App() {
                     Hello
                 </RenderPropExample>
 
-                <RenderPropExample name="nested" position="bottom-right">
+                <ControlledExample />
+
+                <RenderPropExample name="nested" position="top-left">
                     <a href="#4">link</a>
                     <RenderPropExample position="bottom-left" />
                 </RenderPropExample>
