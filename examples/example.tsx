@@ -14,7 +14,8 @@ function App() {
                 <RenderPropExample position="right" />
             </div>
             <div>
-                <RenderPropExample position="center" />
+                <RenderPropExample position="top-left" />
+                <RenderPropExample position="top-right" />
             </div>
         </div>
     );
