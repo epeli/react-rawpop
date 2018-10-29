@@ -16,15 +16,23 @@ const buttonStyles: CSSProperties = {
     margin: 50,
 };
 
-function RenderPropExample(props: {position: IPosition}) {
+function RenderPropExample(props: {
+    position: IPosition;
+    children?: React.ReactNode;
+}) {
     return (
         <Popover
-            overlay={false}
             position={props.position}
             renderContent={() => (
                 <div style={contentStyles}>
-                    <a href="#1">link1</a>
-                    <a href="#2">link2</a>
+                    {props.children ? (
+                        props.children
+                    ) : (
+                        <>
+                            <a href="#1">link1</a>
+                            <a href="#2">link2</a>
+                        </>
+                    )}
                 </div>
             )}
         >

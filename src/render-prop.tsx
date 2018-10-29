@@ -1,21 +1,8 @@
-import React, {CSSProperties} from "react";
+import React, {CSSProperties, MouseEventHandler} from "react";
 import ReactDOM from "react-dom";
-import focusTrap from "focus-trap";
+import focusTrap, {FocusTrap} from "focus-trap";
 
 const Z_INDEX_BASE = 100;
-
-function getOverlayStyles(): CSSProperties {
-    return {
-        display: "flex",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        // backgroundColor: "rgba(0, 0, 0, 0.05)",
-        zIndex: Z_INDEX_BASE,
-    };
-}
 
 function getContainerStyles(props: {
     top: number;
@@ -52,7 +39,6 @@ export type IPosition = keyof typeof TRANSFORMS;
 export interface IPopoverActions {
     open: () => void;
     close: () => void;
-    // getRef: React.RefObject<HTMLElement>;
     getRef: (el: HTMLElement | null) => any;
 }
 
@@ -65,7 +51,6 @@ export interface IContentParams {
 export interface IPopoverProps {
     children: (actions: IPopoverActions) => React.ReactNode;
     position?: IPosition;
-    overlay?: boolean;
     isOpen?: boolean;
     onChange?: (visible: boolean) => void;
     renderContent(props: IContentParams): React.ReactNode;
@@ -77,13 +62,12 @@ interface IState {
     overlayContainer: HTMLElement | null;
 }
 
+const TRAPS: ReturnType<typeof focusTrap>[] = [];
+
 export class Popover extends React.Component<IPopoverProps, IState> {
     targetRef = React.createRef<HTMLElement>();
-    contentRef = React.createRef<HTMLDivElement>();
-
-    static defaultProps = {
-        overlay: true,
-    };
+    contentEl?: HTMLDivElement;
+    trap?: FocusTrap;
 
     constructor(props: IPopoverProps) {
         super(props);
@@ -104,22 +88,33 @@ export class Popover extends React.Component<IPopoverProps, IState> {
 
     componentDidMount() {
         const el = document.getElementById("overlay-container");
-        if (el) {
-            this.setState({overlayContainer: el}, () => {
-                this.updatePosition();
-            });
+
+        if (!el) {
+            return;
         }
+
+        this.setState({overlayContainer: el}, () => {
+            this.updatePosition();
+        });
+    }
+
+    componentWillUnmount() {
+        this.removeTrap();
     }
 
     componentDidUpdate() {
-        if (this.contentRef.current) {
-            if (this.isVisible()) {
-                const trap = focusTrap(this.contentRef.current, {
-                    onDeactivate: this.close,
-                    clickOutsideDeactivates: true,
-                });
-                trap.activate();
-            }
+        this.updateTrap();
+    }
+
+    updateTrap() {
+        if (!this.trap) {
+            return;
+        }
+
+        if (this.isVisible()) {
+            this.trap.activate();
+        } else {
+            this.trap.deactivate();
         }
     }
 
@@ -128,6 +123,12 @@ export class Popover extends React.Component<IPopoverProps, IState> {
             this.props.onChange(false);
         }
         this.setState({isOpen: false});
+
+        TRAPS.forEach(trap => {
+            if (trap !== this.trap) {
+                trap.unpause();
+            }
+        });
     };
 
     handleWrapClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -137,6 +138,14 @@ export class Popover extends React.Component<IPopoverProps, IState> {
     };
 
     open = () => {
+        console.log("trying to open");
+
+        TRAPS.forEach(trap => {
+            if (trap !== this.trap) {
+                trap.pause();
+            }
+        });
+
         if (this.props.onChange) {
             this.props.onChange(true);
         }
@@ -209,21 +218,45 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         }
     };
 
-    renderMaybeOverlay(children: React.ReactNode) {
-        if (!this.props.overlay) {
-            return children;
+    removeTrap() {
+        if (!this.trap) {
+            return;
         }
 
-        return (
-            <div
-                style={getOverlayStyles()}
-                data-popoveroverlay
-                onClick={this.handleOverlayClick}
-            >
-                {children}
-            </div>
-        );
+        this.trap.deactivate();
+
+        const index = TRAPS.indexOf(this.trap);
+
+        if (index > -1) {
+            TRAPS.splice(index, 1);
+        }
     }
+
+    getContentRef = (el: HTMLDivElement | null) => {
+        if (!el) {
+            this.removeTrap();
+            this.contentEl = undefined;
+            return;
+        }
+
+        if (this.contentEl === el) {
+            return;
+        }
+
+        if (this.trap) {
+            this.removeTrap();
+        }
+
+        this.contentEl = el;
+
+        this.trap = focusTrap(el, {
+            clickOutsideDeactivates: true,
+            onDeactivate: this.close,
+        });
+
+        TRAPS.push(this.trap);
+    };
+
     render() {
         const {overlayContainer} = this.state;
 
@@ -237,22 +270,21 @@ export class Popover extends React.Component<IPopoverProps, IState> {
                 {this.isVisible() &&
                     overlayContainer &&
                     ReactDOM.createPortal(
-                        this.renderMaybeOverlay(
-                            <div
-                                ref={this.contentRef}
-                                style={getContainerStyles({
-                                    position: TRANSFORMS[this.getPosition()],
-                                    top: this.state.position.top,
-                                    left: this.state.position.left,
-                                })}
-                            >
-                                {this.props.renderContent({
-                                    position: this.getPosition(),
-                                    close: this.close,
-                                    open: this.open,
-                                })}
-                            </div>,
-                        ),
+                        <div
+                            ref={this.getContentRef}
+                            style={getContainerStyles({
+                                position: TRANSFORMS[this.getPosition()],
+                                top: this.state.position.top,
+                                left: this.state.position.left,
+                            })}
+                        >
+                            {this.props.renderContent({
+                                position: this.getPosition(),
+                                close: this.close,
+                                open: this.open,
+                            })}
+                        </div>,
+
                         overlayContainer,
                     )}
             </>
