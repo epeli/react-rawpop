@@ -1,5 +1,5 @@
 import React, {CSSProperties} from "react";
-import {Popover} from "../src";
+import {Popover, IPosition} from "../src";
 import styled from "react-emotion";
 
 const Button = styled("button")({
@@ -8,16 +8,19 @@ const Button = styled("button")({
 
 const contentStyles: CSSProperties = {
     backgroundColor: "red",
+    padding: 20,
+    opacity: 0.6,
 };
 
 const buttonStyles: CSSProperties = {
-    margin: 100,
+    margin: 50,
 };
 
-function RenderPropExample() {
+function RenderPropExample(props: {position: IPosition}) {
     return (
         <Popover
-            position="center"
+            visible
+            position={props.position}
             renderContent={() => <div style={contentStyles}>hello</div>}
         >
             {pop => (
@@ -26,7 +29,7 @@ function RenderPropExample() {
                     innerRef={pop.getRef}
                     onClick={pop.open}
                 >
-                    click
+                    {props.position}
                 </Button>
             )}
         </Popover>

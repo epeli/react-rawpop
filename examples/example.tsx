@@ -6,8 +6,16 @@ function App() {
     return (
         <div>
             <div id="overlay-container" />
-
-            <RenderPropExample />
+            <div>
+                <RenderPropExample position="center" />
+                <RenderPropExample position="left" />
+                <RenderPropExample position="top" />
+                <RenderPropExample position="bottom" />
+                <RenderPropExample position="right" />
+            </div>
+            <div>
+                <RenderPropExample position="center" />
+            </div>
         </div>
     );
 }
