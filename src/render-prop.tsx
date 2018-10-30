@@ -98,13 +98,12 @@ export class RawPop extends React.Component<RawPopProps, State> {
     }
 
     componentDidMount() {
-        const el = document.getElementById("overlay-container");
+        this.bindScroll();
+        this.getContainer();
+    }
 
-        window.addEventListener(
-            "scroll",
-            this.updatePosition,
-            SUPPORTS_PASSIVE ? {passive: true} : false,
-        );
+    getContainer() {
+        const el = document.getElementById("overlay-container");
 
         if (!el) {
             return;
@@ -113,6 +112,14 @@ export class RawPop extends React.Component<RawPopProps, State> {
         this.setState({overlayContainer: el}, () => {
             this.updatePosition();
         });
+    }
+
+    bindScroll() {
+        window.addEventListener(
+            "scroll",
+            this.updatePosition,
+            SUPPORTS_PASSIVE ? {passive: true} : false,
+        );
     }
 
     componentWillUnmount() {
