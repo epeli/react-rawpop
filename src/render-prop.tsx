@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import focusTrap, {FocusTrap} from "focus-trap";
 
 const DEFAULT_CONTAINER_ID = "react-rawpop-container";
-const Z_INDEX_BASE = 100;
 
 /**
  * https://github.com/WICG/EventListenerOptions/blob/139eb342e1cccb71c9be849927566a2ab6657097/explainer.md
@@ -20,7 +19,7 @@ try {
 } catch (e) {}
 
 const CONTENT_STYLES: CSSProperties = {
-    zIndex: Z_INDEX_BASE + 1,
+    zIndex: 1000,
     position: "absolute",
 };
 
