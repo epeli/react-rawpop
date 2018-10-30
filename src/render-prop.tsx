@@ -282,6 +282,7 @@ export class RawPop extends React.Component<RawPopProps, State> {
                     throw new Error("No contentEl?");
                 }
             },
+            initialFocus: () => el,
             clickOutsideDeactivates: true,
             onDeactivate: this.close,
         });
