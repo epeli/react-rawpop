@@ -45,29 +45,29 @@ const TRANSFORMS = {
     ["bottom-right"]: "",
 };
 
-export type IPosition = keyof typeof TRANSFORMS;
+export type Position = keyof typeof TRANSFORMS;
 
-export interface IPopoverActions {
+export interface TargetRenderProps {
     open: () => void;
     close: () => void;
     getRef: (el: HTMLElement | null) => any;
 }
 
-export interface IContentParams {
+export interface ContentRenderProps {
     close: () => void;
     open: () => void;
-    position: IPosition;
+    position: Position;
 }
 
-export interface IPopoverProps {
-    children: (actions: IPopoverActions) => React.ReactNode;
-    position?: IPosition;
+export interface RawPopProps {
+    children: (actions: TargetRenderProps) => React.ReactNode;
+    position?: Position;
     isOpen?: boolean;
     onChange?: (visible: boolean) => void;
-    renderContent(props: IContentParams): React.ReactNode;
+    renderContent(props: ContentRenderProps): React.ReactNode;
 }
 
-interface IState {
+interface State {
     isOpen: boolean;
     position: {top: number; left: number};
     overlayContainer: HTMLElement | null;
@@ -75,12 +75,12 @@ interface IState {
 
 const TRAPS: ReturnType<typeof focusTrap>[] = [];
 
-export class Popover extends React.Component<IPopoverProps, IState> {
+export class RawPop extends React.Component<RawPopProps, State> {
     targetRef = React.createRef<HTMLElement>();
     containerEl?: HTMLDivElement;
     trap?: FocusTrap;
 
-    constructor(props: IPopoverProps) {
+    constructor(props: RawPopProps) {
         super(props);
         this.state = {
             position: {top: 0, left: 0},
@@ -150,8 +150,6 @@ export class Popover extends React.Component<IPopoverProps, IState> {
     };
 
     open = () => {
-        console.log("trying to open");
-
         TRAPS.forEach(trap => {
             if (trap !== this.trap) {
                 trap.pause();
@@ -165,7 +163,7 @@ export class Popover extends React.Component<IPopoverProps, IState> {
         this.updatePosition();
     };
 
-    getPosition(): IPosition {
+    getPosition(): Position {
         return this.props.position || "bottom";
     }
 

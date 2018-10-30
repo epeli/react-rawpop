@@ -1,5 +1,5 @@
 import React, {CSSProperties} from "react";
-import {Popover, IPosition} from "../src";
+import {RawPop, Position} from "../src";
 import styled from "react-emotion";
 
 const Button = styled("button")({
@@ -40,12 +40,12 @@ class Grow extends React.Component {
 }
 
 function RenderPropExample(props: {
-    position: IPosition;
+    position: Position;
     name?: string;
     children?: React.ReactNode;
 }) {
     return (
-        <Popover
+        <RawPop
             position={props.position}
             renderContent={() => (
                 <div style={contentStyles}>
@@ -70,7 +70,7 @@ function RenderPropExample(props: {
                     {props.name || props.position}
                 </Button>
             )}
-        </Popover>
+        </RawPop>
     );
 }
 

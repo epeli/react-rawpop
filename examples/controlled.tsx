@@ -1,5 +1,5 @@
 import React from "react";
-import {Popover} from "../src";
+import {RawPop} from "../src";
 const initialState = {open: false};
 
 class ControlledExample extends React.Component<{}, typeof initialState> {
@@ -7,7 +7,7 @@ class ControlledExample extends React.Component<{}, typeof initialState> {
 
     render() {
         return (
-            <Popover
+            <RawPop
                 position="bottom"
                 isOpen={this.state.open}
                 onChange={open => {
@@ -28,7 +28,7 @@ class ControlledExample extends React.Component<{}, typeof initialState> {
                         Slow controlled component
                     </button>
                 )}
-            </Popover>
+            </RawPop>
         );
     }
 }
