@@ -19,19 +19,10 @@ try {
     window.removeEventListener("testPassive", null as any, opts);
 } catch (e) {}
 
-function getContainerStyles(props: {
-    top: number;
-    left: number;
-    transform: string;
-}): CSSProperties {
-    return {
-        zIndex: Z_INDEX_BASE + 1,
-        position: "absolute",
-        top: props.top,
-        left: props.left,
-        transform: props.transform,
-    };
-}
+const CONTENT_STYLES: CSSProperties = {
+    zIndex: Z_INDEX_BASE + 1,
+    position: "absolute",
+};
 
 const TRANSFORMS = {
     top: "translate(-50%, -100%)",
@@ -67,6 +58,8 @@ export interface RawPopProps {
     onChange?: (visible: boolean) => void;
     renderContent(props: ContentRenderProps): React.ReactNode;
     getContainer?: () => HTMLElement | null | undefined;
+    contentClassName?: string;
+    contentStyles?: CSSProperties;
 }
 
 interface State {
@@ -299,6 +292,13 @@ export class RawPop extends React.Component<RawPopProps, State> {
 
     render() {
         const {overlayContainer} = this.state;
+        let {contentClassName, contentStyles} = this.props;
+
+        let extraTransform = "";
+
+        if (contentStyles && contentStyles.transform) {
+            extraTransform = " " + contentStyles.transform;
+        }
 
         return (
             <>
@@ -311,13 +311,21 @@ export class RawPop extends React.Component<RawPopProps, State> {
                     overlayContainer &&
                     ReactDOM.createPortal(
                         <div
+                            className={(
+                                "react-rawpop-content " +
+                                (contentClassName || "")
+                            ).trim()}
                             ref={this.getContentRef}
                             tabIndex={-1}
-                            style={getContainerStyles({
-                                transform: TRANSFORMS[this.getPosition()],
+                            style={{
+                                ...CONTENT_STYLES,
+                                ...contentStyles,
+                                transform:
+                                    TRANSFORMS[this.getPosition()] +
+                                    extraTransform,
                                 top: this.state.position.top,
                                 left: this.state.position.left,
-                            })}
+                            }}
                         >
                             {this.props.renderContent({
                                 position: this.getPosition(),
