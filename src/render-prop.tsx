@@ -2,6 +2,7 @@ import React, {CSSProperties, MouseEventHandler} from "react";
 import ReactDOM from "react-dom";
 import focusTrap, {FocusTrap} from "focus-trap";
 
+const DEFAULT_CONTAINER_ID = "react-rawpop-container";
 const Z_INDEX_BASE = 100;
 
 /**
@@ -65,6 +66,7 @@ export interface RawPopProps {
     isOpen?: boolean;
     onChange?: (visible: boolean) => void;
     renderContent(props: ContentRenderProps): React.ReactNode;
+    getContainer?: () => HTMLElement | null | undefined;
 }
 
 interface State {
@@ -102,11 +104,25 @@ export class RawPop extends React.Component<RawPopProps, State> {
         this.getContainer();
     }
 
-    getContainer() {
-        const el = document.getElementById("overlay-container");
+    createContainer() {
+        let el = document.getElementById(DEFAULT_CONTAINER_ID);
 
         if (!el) {
-            return;
+            el = document.createElement("div");
+            el.id = DEFAULT_CONTAINER_ID;
+            document.body.appendChild(el);
+        }
+
+        return el;
+    }
+
+    getContainer() {
+        const el = this.props.getContainer
+            ? this.props.getContainer()
+            : this.createContainer();
+
+        if (!el) {
+            throw new Error("react-rawpop failed to get container");
         }
 
         this.setState({overlayContainer: el}, () => {

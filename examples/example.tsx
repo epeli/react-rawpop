@@ -6,7 +6,6 @@ import ControlledExample from "./controlled";
 function App() {
     return (
         <div>
-            <div id="overlay-container" />
             <div style={{marginTop: 800, width: 1000}}>
                 <RenderPropExample position="center" />
                 <RenderPropExample position="left" />
